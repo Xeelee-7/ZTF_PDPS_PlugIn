@@ -1,0 +1,37 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.5.33516.290
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ZTF_PDPS_Command", "ZTF_PDPS_Command\ZTF_PDPS_Command.csproj", "{8D90335B-7A46-4536-936C-8E29A297029B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ZTF_PDPS_Viewer", "ZTF_PDPS_Viewer\ZTF_PDPS_Viewer.csproj", "{01962D19-203F-4268-BB44-4911C30FD9D7}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ZTF_PDPS_Viewer_WPF", "ZTF_PDPS_Viewer_WPF\ZTF_PDPS_Viewer_WPF.csproj", "{FF034BC7-C8BE-40B3-9E81-2E5AD06F719B}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{8D90335B-7A46-4536-936C-8E29A297029B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8D90335B-7A46-4536-936C-8E29A297029B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8D90335B-7A46-4536-936C-8E29A297029B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8D90335B-7A46-4536-936C-8E29A297029B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{01962D19-203F-4268-BB44-4911C30FD9D7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{01962D19-203F-4268-BB44-4911C30FD9D7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{01962D19-203F-4268-BB44-4911C30FD9D7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{01962D19-203F-4268-BB44-4911C30FD9D7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FF034BC7-C8BE-40B3-9E81-2E5AD06F719B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FF034BC7-C8BE-40B3-9E81-2E5AD06F719B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FF034BC7-C8BE-40B3-9E81-2E5AD06F719B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FF034BC7-C8BE-40B3-9E81-2E5AD06F719B}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {2F5DC74B-9738-4A4F-BB9B-2BCD13525BEF}
+	EndGlobalSection
+EndGlobal

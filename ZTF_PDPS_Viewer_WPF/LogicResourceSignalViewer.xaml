@@ -1,0 +1,24 @@
+﻿<tx:TxWPFViewerUserControl x:Class="ZTF_PDPS_Viewer_WPF.LogicResourceSignalViewer"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:ZTF_PDPS_Viewer_WPF"
+             xmlns:tx="clr-namespace:Tecnomatix.Engineering.Ui;assembly=Tecnomatix.Engineering.Ui"
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="800">
+    <StackPanel Background="White">
+            <Grid Height="200">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition/>
+                <ColumnDefinition/>
+                <ColumnDefinition/>
+                <ColumnDefinition/>
+                <ColumnDefinition/>
+                <ColumnDefinition/>
+                <ColumnDefinition/>
+            </Grid.ColumnDefinitions>
+                <TextBlock Grid.Column="0" Background="Blue"/>
+            </Grid>
+    </StackPanel>      
+</tx:TxWPFViewerUserControl>
