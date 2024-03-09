@@ -33,14 +33,14 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="EngineeringInternalExtension">
-      <HintPath>C:\Program Files\Tecnomatix_2301.0\eMPower\EngineeringInternalExtension.dll</HintPath>
+      <HintPath>C:\Program Files\Tecnomatix_2307\eMPower\EngineeringInternalExtension.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="Implementation">
       <HintPath>C:\Program Files\Tecnomatix_16.1\eMPower\Implementation.dll</HintPath>
     </Reference>
     <Reference Include="Implementation.Biw">
-      <HintPath>C:\Program Files\Tecnomatix_2301.0\eMPower\Implementation.Biw.dll</HintPath>
+      <HintPath>C:\Program Files\Tecnomatix_2307\eMPower\Implementation.Biw.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />

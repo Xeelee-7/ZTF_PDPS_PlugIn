@@ -399,6 +399,7 @@ namespace ZTF_PDPS_Command
             foreach (TxVector pt in txPolyline.Approximation.Points)
             {
                 CreatPOINT(pt, txPolyline);
+                //
             }
 
 
