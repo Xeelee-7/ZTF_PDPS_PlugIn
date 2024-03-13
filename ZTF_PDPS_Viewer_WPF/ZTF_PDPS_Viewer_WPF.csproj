@@ -18,7 +18,7 @@
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
-    <OutputPath>bin\Debug\</OutputPath>
+    <OutputPath>C:\Program Files\Tecnomatix_2307\eMPower\DotNetViewers\ZTF\</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
@@ -32,8 +32,11 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="DnPlcCommands">
+      <HintPath>C:\Program Files\Tecnomatix_2307\eMPower\DotNetCommands\DnPlcCommands.dll</HintPath>
+    </Reference>
     <Reference Include="EngineeringInternalExtension">
-      <HintPath>C:\Program Files\Tecnomatix_2301.0\eMPower\EngineeringInternalExtension.dll</HintPath>
+      <HintPath>C:\Program Files\Tecnomatix_2307\eMPower\EngineeringInternalExtension.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
@@ -46,14 +49,8 @@
     <Reference Include="System.Xaml">
       <RequiredTargetFramework>4.0</RequiredTargetFramework>
     </Reference>
-    <Reference Include="Tecnomatix.Engineering">
-      <HintPath>C:\Program Files\Tecnomatix_2301.0\eMPower\Tecnomatix.Engineering.dll</HintPath>
-    </Reference>
-    <Reference Include="Tecnomatix.Engineering.Olp">
-      <HintPath>C:\Program Files\Tecnomatix_2301.0\eMPower\Tecnomatix.Engineering.Olp.dll</HintPath>
-    </Reference>
     <Reference Include="Tecnomatix.Engineering.Ui">
-      <HintPath>C:\Program Files\Tecnomatix_2301.0\eMPower\Tecnomatix.Engineering.Ui.dll</HintPath>
+      <HintPath>C:\Program Files\Tecnomatix_2307\eMPower\Tecnomatix.Engineering.Ui.dll</HintPath>
     </Reference>
     <Reference Include="WindowsBase" />
     <Reference Include="PresentationCore" />

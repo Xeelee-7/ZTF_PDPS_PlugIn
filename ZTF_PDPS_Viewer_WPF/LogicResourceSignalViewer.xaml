@@ -7,18 +7,9 @@
              xmlns:tx="clr-namespace:Tecnomatix.Engineering.Ui;assembly=Tecnomatix.Engineering.Ui"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
-    <StackPanel Background="White">
-            <Grid Height="250">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition/>
-                <ColumnDefinition/>
-                <ColumnDefinition/>
-                <ColumnDefinition/>
-                <ColumnDefinition/>
-                <ColumnDefinition/>
-                <ColumnDefinition/>
-            </Grid.ColumnDefinitions>
-                <TextBlock Grid.Column="0" Background="Blue"/>
-            </Grid>
-    </StackPanel>      
+    <tx:TxWPFViewerUserControl.Resources>
+      
+    </tx:TxWPFViewerUserControl.Resources>
+    <StackPanel VerticalAlignment="Top" x:Name="stackpanel1">
+    </StackPanel>
 </tx:TxWPFViewerUserControl>
