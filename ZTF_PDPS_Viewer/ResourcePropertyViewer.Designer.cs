@@ -29,55 +29,11 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            this.textBoxResourceType = new System.Windows.Forms.TextBox();
-            this.labelResourceType = new System.Windows.Forms.Label();
-            this.labelABSLocation = new System.Windows.Forms.Label();
-            this.textBoxABSLocation = new System.Windows.Forms.TextBox();
             this.My = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.toolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
+            this.selectLink = new Tecnomatix.Engineering.Ui.TxObjEditBoxCtrl();
             this.My.SuspendLayout();
             this.SuspendLayout();
-            // 
-            // textBoxResourceType
-            // 
-            this.textBoxResourceType.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.textBoxResourceType.Location = new System.Drawing.Point(177, 66);
-            this.textBoxResourceType.Name = "textBoxResourceType";
-            this.textBoxResourceType.ReadOnly = true;
-            this.textBoxResourceType.Size = new System.Drawing.Size(283, 25);
-            this.textBoxResourceType.TabIndex = 0;
-            // 
-            // labelResourceType
-            // 
-            this.labelResourceType.AutoSize = true;
-            this.labelResourceType.Location = new System.Drawing.Point(20, 69);
-            this.labelResourceType.Name = "labelResourceType";
-            this.labelResourceType.Size = new System.Drawing.Size(111, 15);
-            this.labelResourceType.TabIndex = 1;
-            this.labelResourceType.Text = "ResourceType:";
-            // 
-            // labelABSLocation
-            // 
-            this.labelABSLocation.AutoSize = true;
-            this.labelABSLocation.Location = new System.Drawing.Point(20, 128);
-            this.labelABSLocation.Name = "labelABSLocation";
-            this.labelABSLocation.Size = new System.Drawing.Size(151, 15);
-            this.labelABSLocation.TabIndex = 2;
-            this.labelABSLocation.Text = "AbsoluteLocation :";
-            // 
-            // textBoxABSLocation
-            // 
-            this.textBoxABSLocation.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.textBoxABSLocation.Location = new System.Drawing.Point(177, 128);
-            this.textBoxABSLocation.Multiline = true;
-            this.textBoxABSLocation.Name = "textBoxABSLocation";
-            this.textBoxABSLocation.ReadOnly = true;
-            this.textBoxABSLocation.Size = new System.Drawing.Size(283, 64);
-            this.textBoxABSLocation.TabIndex = 3;
             // 
             // My
             // 
@@ -93,32 +49,39 @@
             this.toolStripMenuItem1.Size = new System.Drawing.Size(105, 24);
             this.toolStripMenuItem1.Text = "122";
             // 
+            // selectLink
+            // 
+            this.selectLink.KeepFaceEmphasizedWhenControlIsNotFocused = true;
+            this.selectLink.ListenToPick = true;
+            this.selectLink.Location = new System.Drawing.Point(60, 75);
+            this.selectLink.Name = "selectLink";
+            this.selectLink.Object = null;
+            this.selectLink.PickAndClear = false;
+            this.selectLink.PickLevel = Tecnomatix.Engineering.Ui.TxPickLevel.Component;
+            this.selectLink.PickOnly = false;
+            this.selectLink.ReadOnly = false;
+            this.selectLink.Size = new System.Drawing.Size(271, 28);
+            this.selectLink.TabIndex = 4;
+            this.selectLink.ValidatorType = Tecnomatix.Engineering.Ui.TxValidatorType.AnyLocatableObject;
+            // 
             // ResourcePropertyViewer
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
             this.ContextMenuStrip = this.My;
-            this.Controls.Add(this.textBoxABSLocation);
-            this.Controls.Add(this.labelABSLocation);
-            this.Controls.Add(this.labelResourceType);
-            this.Controls.Add(this.textBoxResourceType);
+            this.Controls.Add(this.selectLink);
             this.MinimumSize = new System.Drawing.Size(500, 250);
             this.Name = "ResourcePropertyViewer";
-            this.Size = new System.Drawing.Size(496, 246);
+            this.Size = new System.Drawing.Size(496, 343);
             this.My.ResumeLayout(false);
             this.ResumeLayout(false);
-            this.PerformLayout();
 
         }
 
         #endregion
-
-        private System.Windows.Forms.TextBox textBoxResourceType;
-        private System.Windows.Forms.Label labelResourceType;
-        private System.Windows.Forms.Label labelABSLocation;
-        private System.Windows.Forms.TextBox textBoxABSLocation;
         private System.Windows.Forms.ContextMenuStrip My;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem1;
+        private Tecnomatix.Engineering.Ui.TxObjEditBoxCtrl selectLink;
     }
 }

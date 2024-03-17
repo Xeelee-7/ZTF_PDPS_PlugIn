@@ -18,28 +18,10 @@ namespace ZTF_PDPS_Viewer
         public ResourcePropertyViewer()
         {
             InitializeComponent();
-            TxApplication.ActiveSelection.ItemsSet += TxSelection_ItemsSet;
-            
+            TxTypeFilterValidator txTypeFilterValidator = new TxTypeFilterValidator(new TxTypeFilter(typeof(TxKinematicLink)));
+            selectLink.SetValidator(txTypeFilterValidator);
             
 
-        }
-
-        private void TxSelection_ItemsSet(object sender, TxSelection_ItemsSetEventArgs e)
-        {
-            if (e.ObjectList.Count>0)
-            {
-                textBoxResourceType.Text = e.ObjectList[0].GetType().ToString();
-                if (e.ObjectList[0] is ITxLocatableObject)
-                {
-                    ITxLocatableObject locatableObject = (ITxLocatableObject)e.ObjectList[0];
-                    textBoxABSLocation.Text = locatableObject.AbsoluteLocation.Translation+"\r\n"+ locatableObject.AbsoluteLocation.RotationRPY_XYZ;
-                }
-                else
-                {
-                    textBoxABSLocation.Text=null; 
-                }
-            }
-            this.RefreshDisplay();
         }
 
         public string ViewerName => "ResourcePropertyViewer";
@@ -51,36 +33,8 @@ namespace ZTF_PDPS_Viewer
         public event TxViewerControl_MenuDisplayRequestedEventHandler MenuDisplayRequested;
 
 
-        protected override void OnMouseDown(MouseEventArgs e)
-
-        {
-
-            if (e.Button == MouseButtons.Right)
-
-            {
-
-                Point position = new Point(e.X, e.Y);
-
-                FireMenuDisplayRequested("My", position);
-
-            }
-
-            base.OnMouseDown(e);
-            
-
-        }
 
 
-
-        private void FireMenuDisplayRequested(string viewerName, Point viewerPosition)
-
-        {
-
-            if (MenuDisplayRequested != null)
-
-                MenuDisplayRequested(this, new TxViewerControl_MenuDisplayRequestedEventArgs(viewerName, viewerPosition));
-
-        }
 
 
         public void Initialize()

@@ -1,0 +1,49 @@
+<ResourceDictionary x:Class="DnPlcCommands.RuleBasedConnectSignalsToLB.TecnoListViewStyle"
+                    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:local="clr-namespace:DnPlcCommands.RuleBasedConnectSignalsToLB"
+                    xmlns:tx="clr-namespace:Tecnomatix.Engineering.Ui.WPF;assembly=Tecnomatix.Engineering.Ui">
+  <ResourceDictionary.MergedDictionaries>
+    <tx:TxResourceDictionary EnableFlatStyle="true"/>
+  </ResourceDictionary.MergedDictionaries>
+  <SolidColorBrush x:Key="TecnoItemBackgroundColor" Color="#FFFFFF"/>
+  <SolidColorBrush x:Key="TecnoSelectedItemBackgroundColor" Color="#CDE6EB"/>
+  <SolidColorBrush x:Key="TecnoNewItemBackgroundColor" Color="#CDEBDC"/>
+  <SolidColorBrush x:Key="LBItemBorderColor" Color="#000000"/>
+  <SolidColorBrush x:Key="LBItemBackgroundColor" Color="#FFF6D5"/>
+  <SolidColorBrush x:Key="LabelsBackgroundColorBrush" Color="#DCDCDC"/>
+  <Style x:Key="TecnoLeftAlignedHeaderStyle" TargetType="{x:Type GridViewColumnHeader}"
+         BasedOn="{StaticResource {x:Type GridViewColumnHeader}}">
+    <Setter Property="Control.HorizontalContentAlignment" Value="Left"/>
+  </Style>
+  <Style x:Key="TecnoListViewItemBaseStyle" TargetType="{x:Type ListViewItem}"
+         BasedOn="{StaticResource {x:Type ListViewItem}}">
+  </Style>
+  <Style x:Key="TecnoListViewItemLBStyle" TargetType="{x:Type ListViewItem}"
+         BasedOn="{StaticResource TecnoListViewItemBaseStyle}">
+    <Setter Property="Control.Foreground" Value="Black"/>
+    <Setter Property="Control.HorizontalContentAlignment" Value="Stretch"/>
+    <Setter Property="Control.VerticalContentAlignment" Value="Stretch"/>
+  </Style>
+  <Style x:Key="TecnoListViewBaseStyle" TargetType="{x:Type ListView}"
+         BasedOn="{StaticResource {x:Type ListView}}">
+    <Style.Resources>
+      <Style TargetType="{x:Type GridViewColumnHeader}" BasedOn="{StaticResource TecnoLeftAlignedHeaderStyle}"/>
+      <Style TargetType="{x:Type ListViewItem}" BasedOn="{StaticResource TecnoListViewItemBaseStyle}"/>
+    </Style.Resources>
+    <Setter Property="VirtualizingPanel.ScrollUnit" Value="Pixel"/>
+  </Style>
+  <Style x:Key="TecnoListViewLBStyle" TargetType="{x:Type ListView}"
+         BasedOn="{StaticResource TecnoListViewBaseStyle}">
+    <Style.Resources>
+      <Style TargetType="{x:Type ListViewItem}" BasedOn="{StaticResource TecnoListViewItemLBStyle}"/>
+    </Style.Resources>
+  </Style>
+  <Style x:Key="TecnoListViewStyle" TargetType="{x:Type ListView}"
+         BasedOn="{StaticResource TecnoListViewBaseStyle}">
+    <Style.Resources>
+      <Style TargetType="{x:Type ListViewItem}" BasedOn="{StaticResource TecnoListViewItemBaseStyle}"/>
+    </Style.Resources>
+    <Setter Property="VirtualizingPanel.VirtualizationMode" Value="Recycling"/>
+  </Style>
+</ResourceDictionary>

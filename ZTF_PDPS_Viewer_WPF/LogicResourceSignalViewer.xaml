@@ -1,15 +1,430 @@
 ﻿<tx:TxWPFViewerUserControl x:Class="ZTF_PDPS_Viewer_WPF.LogicResourceSignalViewer"
-             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
-             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-             xmlns:local="clr-namespace:ZTF_PDPS_Viewer_WPF"
-             xmlns:tx="clr-namespace:Tecnomatix.Engineering.Ui;assembly=Tecnomatix.Engineering.Ui"
-             mc:Ignorable="d" 
-             d:DesignHeight="450" d:DesignWidth="800">
-    <tx:TxWPFViewerUserControl.Resources>
-      
-    </tx:TxWPFViewerUserControl.Resources>
-    <StackPanel VerticalAlignment="Top" x:Name="stackpanel1">
-    </StackPanel>
+                        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                        xmlns:txwpf="clr-namespace:Tecnomatix.Engineering.Ui.WPF;assembly=Tecnomatix.Engineering.Ui"
+                        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+                        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+                        xmlns:local="clr-namespace:DnPlcCommands.RuleBasedConnectSignalsToLB;assembly=DnPlcCommands"
+                             xmlns:tx="clr-namespace:Tecnomatix.Engineering.Ui;assembly=Tecnomatix.Engineering.Ui"
+                        xmlns:rs="clr-namespace:ZTF_PDPS_Viewer_WPF.Properties"
+                         FrameworkElement.MinWidth="400"
+                        FrameworkElement.MinHeight="550" FrameworkElement.Width="1350" FrameworkElement.Height="550" >
+    <FrameworkElement.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="TecnoListViewStyle.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+            <local:PinSignalMarginConvertor x:Key="PinSignalMarginConvertor"/>
+            <local:PinSignalsVisibilityConverter x:Key="PinSignalsVisibilityConverter"/>
+            <local:SignalBorderThicknessConvertor x:Key="SignalBorderThicknessConvertor"/>
+            <local:SignalCornerRadiusConvertor x:Key="SignalCornerRadiusConvertor"/>
+            <local:ConnectionToImageConvertor x:Key="ConnectionToImageConvertor"/>
+            <local:LBToImageConvertor x:Key="LBToImageConvertor"/>
+            <local:PinsToPinCount x:Key="PinsToPinCount"/>
+            <local:AlwaysVisibleConvertor x:Key="AlwaysVisibleConvertor"/>
+            <local:ShowMatchesOnlyActiveOptionConvertor x:Key="ShowMatchesOnlyActiveOptionConvertor"/>
+            <local:DarkenColorConvertor x:Key="DarkenColorConvertor"/>
+            <DataTemplate x:Key="EmptyCellTemplate"/>
+            <Style x:Key="LineStyle" TargetType="{x:Type Line}">
+                <Setter Property="FrameworkElement.VerticalAlignment" Value="Center"/>
+                <Setter Property="FrameworkElement.Height" Value="2"/>
+                <Setter Property="FrameworkElement.Margin" Value="-6, 0, -7, 0"/>
+                <Setter Property="Shape.Stroke" Value="{StaticResource LBItemBorderColor}"/>
+                <Setter Property="Shape.StrokeThickness" Value="1.0"/>
+                <Setter Property="Line.Y1" Value="1.5"/>
+                <Setter Property="Line.Y2" Value="1.5"/>
+            </Style>
+            <Style x:Key="ArrowHeadSyle" TargetType="{x:Type Polygon}">
+                <Setter Property="FrameworkElement.VerticalAlignment" Value="Center"/>
+                <Setter Property="FrameworkElement.Height" Value="6"/>
+                <Setter Property="Shape.Fill" Value="{StaticResource LBItemBorderColor}"/>
+                <Setter Property="Shape.Stroke" Value="{StaticResource LBItemBorderColor}"/>
+                <Setter Property="Polygon.Points" Value="0.5,1.5 3.5,3.5 0.5,5.5"/>
+                <Setter Property="UIElement.Visibility">
+                    <Setter.Value>
+                        <MultiBinding Converter="{StaticResource PinSignalsVisibilityConverter}">
+                            <Binding Path="ConnectedObjects.Count"/>
+                            <Binding Path="MatchedObjects.Count"/>
+                            <Binding Path="CreatedObjects.Count"/>
+                        </MultiBinding>
+                    </Setter.Value>
+                </Setter>
+            </Style>
+            <Style x:Key="LBItemTextStyle" TargetType="{x:Type TextBlock}">
+                <Setter Property="TextBlock.TextTrimming" Value="CharacterEllipsis"/>
+                <Setter Property="FrameworkElement.VerticalAlignment" Value="Center"/>
+                <Setter Property="FrameworkElement.HorizontalAlignment" Value="Stretch"/>
+                <Setter Property="UIElement.IsHitTestVisible" Value="false"/>
+            </Style>
+            <Style x:Key="BaseBorderStyle" TargetType="{x:Type Border}">
+                <Setter Property="Border.BorderBrush" Value="{StaticResource LBItemBorderColor}"/>
+                <Setter Property="Border.Background" Value="{StaticResource TecnoItemBackgroundColor}"/>
+                <Setter Property="Border.BorderThickness" Value="1"/>
+                <Setter Property="Border.CornerRadius" Value="7"/>
+                <Setter Property="Border.Padding" Value="6, 6"/>
+            </Style>
+            <Style x:Key="LBBorderStyle" TargetType="{x:Type Border}" BasedOn="{StaticResource BaseBorderStyle}">
+                <Setter Property="FrameworkElement.Margin" Value="-5, 4, 6, 4"/>
+            </Style>
+            <Style x:Key="DropTargetBorderStyle" TargetType="{x:Type Border}"
+             BasedOn="{StaticResource BaseBorderStyle}">
+                <Setter Property="UIElement.AllowDrop" Value="true"/>
+            </Style>
+            <Style x:Key="PinBorderStyle" TargetType="{x:Type Border}"
+             BasedOn="{StaticResource DropTargetBorderStyle}">
+                <Setter Property="FrameworkElement.Margin" Value="-5, 4, 6, 4"/>
+            </Style>
+            <Style x:Key="SignalBorderStyle" TargetType="{x:Type Border}"
+             BasedOn="{StaticResource DropTargetBorderStyle}">
+                <Setter Property="Border.CornerRadius">
+                    <Setter.Value>
+                        <MultiBinding Converter="{StaticResource SignalCornerRadiusConvertor}">
+                            <Binding/>
+                            <Binding ElementName="AllSignalsGrid" Path="DataContext"/>
+                            <Binding ElementName="AllSignalsGrid" Path="DataContext.ConnectedObjects.Count"/>
+                            <Binding ElementName="AllSignalsGrid" Path="DataContext.MatchedObjects.Count"/>
+                            <Binding ElementName="AllSignalsGrid" Path="DataContext.CreatedObjects.Count"/>
+                        </MultiBinding>
+                    </Setter.Value>
+                </Setter>
+                <Setter Property="Border.BorderThickness">
+                    <Setter.Value>
+                        <MultiBinding Converter="{StaticResource SignalBorderThicknessConvertor}">
+                            <Binding/>
+                            <Binding ElementName="AllSignalsGrid" Path="DataContext"/>
+                            <Binding ElementName="AllSignalsGrid" Path="DataContext.ConnectedObjects.Count"/>
+                            <Binding ElementName="AllSignalsGrid" Path="DataContext.MatchedObjects.Count"/>
+                            <Binding ElementName="AllSignalsGrid" Path="DataContext.CreatedObjects.Count"/>
+                        </MultiBinding>
+                    </Setter.Value>
+                </Setter>
+                <Setter Property="FrameworkElement.ToolTip">
+                    <Setter.Value>
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                            </Grid.RowDefinitions>
+                            <TextBlock Grid.Row="0" Grid.Column="0" FontWeight="Bold"
+                         Text="Name"/>
+                            <Image Grid.Row="0" Grid.Column="1" Margin="4, 0, 0, 0" RenderOptions.BitmapScalingMode="HighQuality"
+                     Source="{Binding Converter={StaticResource ConnectionToImageConvertor}}"/>
+                            <TextBlock Grid.Row="0" Grid.Column="2" Margin="4, 0, 0, 0" Text="{Binding Name}"/>
+                            <TextBlock Grid.Row="1" Grid.Column="0" FontWeight="Bold"
+                         Text="Incompatible data type."/>
+                            <TextBlock Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="2" Margin="4, 0, 0, 0"
+                         Text="{Binding DataTypeString}"/>
+                            <TextBlock Grid.Row="2" Grid.Column="0" FontWeight="Bold"
+                         Text="Address"
+                         Visibility="{Binding AddressString, Converter={StaticResource AlwaysVisibleConvertor}, FallbackValue=Collapsed}"/>
+                            <TextBlock Grid.Row="2" Grid.Column="1" Grid.ColumnSpan="2" Margin="4, 0, 0, 0" Text="{Binding AddressString}"
+                         Visibility="{Binding AddressString, Converter={StaticResource AlwaysVisibleConvertor}, FallbackValue=Collapsed}"/>
+                            <TextBlock Grid.Row="3" Grid.Column="0" FontWeight="Bold"
+                         Text="Logic resource"
+                         Visibility="{Binding ResourceName, Converter={StaticResource AlwaysVisibleConvertor}, FallbackValue=Collapsed}"/>
+                            <TextBlock Grid.Row="3" Grid.Column="1" Grid.ColumnSpan="2" Margin="4, 0, 0, 0" Text="{Binding ResourceName}"
+                         Visibility="{Binding ResourceName, Converter={StaticResource AlwaysVisibleConvertor}, FallbackValue=Collapsed}"/>
+                            <TextBlock Grid.Row="4" Grid.Column="0" FontWeight="Bold"
+                         Text="Comment"/>
+                            <TextBlock Grid.Row="4" Grid.Column="1" Grid.ColumnSpan="2" Margin="4, 0, 0, 0" MaxWidth="1000"
+                         TextWrapping="WrapWithOverflow" Text="{Binding Comment}"/>
+                        </Grid>
+                    </Setter.Value>
+                </Setter>
+            </Style>
+            <DataTemplate x:Key="LBNameCellTemplate">
+                <Border Style="{StaticResource LBBorderStyle}" Background="{StaticResource LBItemBackgroundColor}"
+                ContextMenu="{StaticResource cmSelectedLBs}">
+                    <TextBlock Style="{StaticResource LBItemTextStyle}" FontWeight="Bold">
+                    </TextBlock>
+                    <FrameworkElement.ToolTip>
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                            </Grid.RowDefinitions>
+                            <TextBlock Grid.Row="0" Grid.Column="0" FontWeight="Bold" Text="Name"/>
+                            <Image Grid.Row="0" Grid.Column="1" Margin="4, 0, 0, 0" RenderOptions.BitmapScalingMode="HighQuality"
+                     Source="{Binding Converter={StaticResource LBToImageConvertor}}"/>
+                            <TextBlock Grid.Row="0" Grid.Column="2" Margin="4, 0, 0, 0" Text="{Binding Name}"/>
+                            <TextBlock Grid.Row="1" Grid.Column="0" FontWeight="Bold" Text="Path"/>
+                            <TextBlock Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="2" Margin="4, 0, 0, 0" MaxWidth="1000"
+                         TextWrapping="WrapWithOverflow" Text="{Binding FullPath}"/>
+                            <TextBlock Grid.Row="2" Grid.Column="0" FontWeight="Bold"
+                         Text="LB entries"/>
+                            <TextBlock Grid.Row="2" Grid.Column="1" Grid.ColumnSpan="2" Margin="4, 0, 0, 0"
+                         Text="{Binding Path=Entries, Converter={StaticResource PinsToPinCount}, ConverterParameter=False}"/>
+                            <TextBlock Grid.Row="3" Grid.Column="0" FontWeight="Bold"
+                         Text="SCL entries"/>
+                            <TextBlock Grid.Row="3" Grid.Column="1" Grid.ColumnSpan="2" Margin="4, 0, 0, 0"
+                         Text="{Binding Path=Entries, Converter={StaticResource PinsToPinCount}, ConverterParameter=True}"/>
+                            <TextBlock Grid.Row="4" Grid.Column="0" FontWeight="Bold"
+                         Text="LB exits"/>
+                            <TextBlock Grid.Row="4" Grid.Column="1" Grid.ColumnSpan="2" Margin="4, 0, 0, 0"
+                         Text="{Binding Path=Exits, Converter={StaticResource PinsToPinCount}, ConverterParameter=False}"/>
+                            <TextBlock Grid.Row="5" Grid.Column="0" FontWeight="Bold"
+                         Text="SCL exits"/>
+                            <TextBlock Grid.Row="5" Grid.Column="1" Grid.ColumnSpan="2" Margin="4, 0, 0, 0"
+                         Text="{Binding Path=Exits, Converter={StaticResource PinsToPinCount}, ConverterParameter=True}"/>
+                        </Grid>
+                    </FrameworkElement.ToolTip>
+                </Border>
+            </DataTemplate>
+            <DataTemplate x:Key="PinCellTemplate">
+                <Border Style="{StaticResource PinBorderStyle}" ContextMenu="{StaticResource cmPin}">
+                    <TextBlock Style="{StaticResource LBItemTextStyle}">
+                    </TextBlock>
+                    <FrameworkElement.ToolTip>
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                            </Grid.RowDefinitions>
+                            <TextBlock Grid.Row="0" Grid.Column="0" FontWeight="Bold"
+                         Text="Name"/>
+                            <Image Grid.Row="0" Grid.Column="1" Margin="4, 0, 0, 0" RenderOptions.BitmapScalingMode="HighQuality"
+                     Source="{Binding Icon}"/>
+                            <TextBlock Grid.Row="0" Grid.Column="2" Margin="4, 0, 0, 0" Text="{Binding Name}"/>
+                            <TextBlock Grid.Row="1" Grid.Column="0" FontWeight="Bold"
+                         Text="Type"/>
+                            <TextBlock Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="2" Margin="4, 0, 0, 0"
+                         Text="{Binding DataTypeString}"/>
+                            <TextBlock Grid.Row="2" Grid.Column="0" FontWeight="Bold"
+                         Text="Connected signals"/>
+                            <TextBlock Grid.Row="2" Grid.Column="1" Grid.ColumnSpan="2" Margin="4, 0, 0, 0"
+                         Text="{Binding ConnectedObjects.Count}"/>
+                            <TextBlock Grid.Row="3" Grid.Column="0" FontWeight="Bold"
+                         Text="Matched signals"/>
+                            <TextBlock Grid.Row="3" Grid.Column="1" Grid.ColumnSpan="2" Margin="4, 0, 0, 0"
+                         Text="{Binding MatchedObjects.Count}"/>
+                            <TextBlock Grid.Row="4" Grid.Column="0" FontWeight="Bold"
+                         Text="Created signals"/>
+                            <TextBlock Grid.Row="4" Grid.Column="1" Grid.ColumnSpan="2" Margin="4, 0, 0, 0"
+                         Text="{Binding CreatedObjects.Count}"/>
+                        </Grid>
+                    </FrameworkElement.ToolTip>
+                </Border>
+            </DataTemplate>
+            <DataTemplate x:Key="SignalCellTemplate">
+                <Border Style="{StaticResource SignalBorderStyle}" ContextMenu="{StaticResource cmPinSignal}">
+                    <TextBlock Style="{StaticResource LBItemTextStyle}" Text="{Binding Name}"/>
+                </Border>
+            </DataTemplate>
+            <DataTemplate x:Key="NewSignalCellTemplate">
+                <Border Style="{StaticResource SignalBorderStyle}" ContextMenu="{StaticResource cmPinSignal}"
+                Background="{StaticResource TecnoNewItemBackgroundColor}">
+                    <TextBlock Style="{StaticResource LBItemTextStyle}" Text="{Binding Name}"/>
+                </Border>
+            </DataTemplate>
+            <DataTemplate x:Key="AllSignalsCellTemplate">
+                <Grid x:Name="AllSignalsGrid" Margin="-5, 4, 6, 4">
+                    <UIElement.Visibility>
+                        <MultiBinding Converter="{StaticResource PinSignalsVisibilityConverter}">
+                            <Binding Path="ConnectedObjects.Count"/>
+                            <Binding Path="MatchedObjects.Count"/>
+                            <Binding Path="CreatedObjects.Count"/>
+                        </MultiBinding>
+                    </UIElement.Visibility>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+                    <ItemsControl Grid.Row="0" ItemTemplate="{StaticResource SignalCellTemplate}"
+                        ItemsSource="{Binding ConnectedObjects}"/>
+                    <ItemsControl Grid.Row="1" ItemTemplate="{StaticResource  }"
+                        ItemsSource="{Binding MatchedObjects}"/>
+                    <ItemsControl Grid.Row="2" ItemTemplate="{StaticResource NewSignalCellTemplate}"
+                        ItemsSource="{Binding CreatedObjects}"/>
+                </Grid>
+            </DataTemplate>
+            <DataTemplate x:Key="LBSingleEntryCellTemplate">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="0"/>
+                        <ColumnDefinition Width="0"/>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="0"/>
+                    </Grid.ColumnDefinitions>
+                    <ContentPresenter Grid.Column="0" ContentTemplate="{StaticResource AllSignalsCellTemplate}"
+                            Margin="{Binding ElementName=EntriesSignalsColumn, Path=ActualWidth, Converter={StaticResource PinSignalMarginConvertor}, ConverterParameter=True}"/>
+                    <Line Grid.Column="1" Style="{StaticResource LineStyle}" X1="-12" X2="1">
+                        <UIElement.Visibility>
+                            <MultiBinding Converter="{StaticResource PinSignalsVisibilityConverter}">
+                                <Binding Path="ConnectedObjects.Count"/>
+                                <Binding Path="MatchedObjects.Count"/>
+                                <Binding Path="CreatedObjects.Count"/>
+                            </MultiBinding>
+                        </UIElement.Visibility>
+                    </Line>
+                    <Polygon Grid.Column="1" Margin="-9, 0, 0, 0" Style="{StaticResource ArrowHeadSyle}"/>
+                    <ContentPresenter x:Name="EntryCell" Grid.Column="2" VerticalAlignment="Center"
+                            ContentTemplate="{StaticResource PinCellTemplate}"/>
+                    <Line Grid.Column="3" Style="{StaticResource LineStyle}" X1="0" X2="13"/>
+                </Grid>
+            </DataTemplate>
+            <DataTemplate x:Key="LBEntryCellTemplate">
+                <ItemsControl VerticalContentAlignment="Center" ItemTemplate="{StaticResource LBSingleEntryCellTemplate}"
+                      ItemsSource="{Binding Entries}"/>
+            </DataTemplate>
+            <DataTemplate x:Key="LBSingleExitCellTemplate">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="0"/>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="0"/>
+                        <ColumnDefinition Width="0"/>
+                    </Grid.ColumnDefinitions>
+                    <Line Grid.Column="0" Style="{StaticResource LineStyle}" X1="-12" X2="1"/>
+                    <ContentPresenter x:Name="ExitCell" Grid.Column="1" VerticalAlignment="Center"
+                            ContentTemplate="{StaticResource PinCellTemplate}"/>
+                    <Line Grid.Column="2" Style="{StaticResource LineStyle}" X1="0" X2="13">
+                        <UIElement.Visibility>
+                            <MultiBinding Converter="{StaticResource PinSignalsVisibilityConverter}">
+                                <Binding Path="ConnectedObjects.Count"/>
+                                <Binding Path="MatchedObjects.Count"/>
+                                <Binding Path="CreatedObjects.Count"/>
+                            </MultiBinding>
+                        </UIElement.Visibility>
+                    </Line>
+                    <Polygon Grid.Column="2" Margin="3, 0, -10, 0" Style="{StaticResource ArrowHeadSyle}"/>
+                    <ContentPresenter Grid.Column="3" ContentTemplate="{StaticResource AllSignalsCellTemplate}"
+                            Margin="{Binding ElementName=ExitsSignalsColumn, Path=ActualWidth, Converter={StaticResource PinSignalMarginConvertor}, ConverterParameter=False}"/>
+                </Grid>
+            </DataTemplate>
+            <DataTemplate x:Key="LBExitCellTemplate">
+                <ItemsControl VerticalContentAlignment="Center" ItemTemplate="{StaticResource LBSingleExitCellTemplate}"
+                      ItemsSource="{Binding Exits}"/>
+            </DataTemplate>
+            <DataTemplate x:Key="TecnoListViewItemCellTemplate">
+                <Border>
+                    <TextBlock TextTrimming="CharacterEllipsis" VerticalAlignment="Center" Text="{Binding}"/>
+                </Border>
+            </DataTemplate>
+            <DataTemplate x:Key="NameCellTemplate">
+                <ContentControl ContentTemplate="{StaticResource TecnoListViewItemCellTemplate}" Content="{Binding Name}"/>
+            </DataTemplate>
+            <DataTemplate x:Key="TypeCellTemplate">
+                <ContentControl ContentTemplate="{StaticResource TecnoListViewItemCellTemplate}" Content="{Binding DataTypeString}"/>
+            </DataTemplate>
+            <DataTemplate x:Key="AddressCellTemplate">
+                <ContentControl ContentTemplate="{StaticResource TecnoListViewItemCellTemplate}" Content="{Binding AddressString}"/>
+            </DataTemplate>
+            <DataTemplate x:Key="CommentCellTemplate">
+                <ContentControl ContentTemplate="{StaticResource TecnoListViewItemCellTemplate}" Content="{Binding Comment}"/>
+            </DataTemplate>
+            <DataTemplate x:Key="InternalNameCellTemplate">
+                <ContentControl ContentTemplate="{StaticResource TecnoListViewItemCellTemplate}" Content="{Binding Name}"/>
+            </DataTemplate>
+            <DataTemplate x:Key="InternalTypeCellTemplate">
+                <ContentControl ContentTemplate="{StaticResource TecnoListViewItemCellTemplate}" Content="{Binding DataTypeString}"/>
+            </DataTemplate>
+            <DataTemplate x:Key="InternalResourceCellTemplate">
+                <ContentControl ContentTemplate="{StaticResource TecnoListViewItemCellTemplate}" Content="{Binding ResourceName}"/>
+            </DataTemplate>
+            <DataTemplate x:Key="InternalCommentCellTemplate">
+                <ContentControl ContentTemplate="{StaticResource TecnoListViewItemCellTemplate}" Content="{Binding Comment}"/>
+            </DataTemplate>
+            <Style x:Key="ListViewTitleStyle" TargetType="{x:Type TextBlock}">
+                <Setter Property="TextBlock.Background"
+                Value="{Binding Path=Background, Converter={StaticResource DarkenColorConvertor}, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Window}}}"/>
+                <Setter Property="TextBlock.FontWeight" Value="Bold"/>
+                <Setter Property="FrameworkElement.Margin" Value="0"/>
+                <Setter Property="TextBlock.Padding" Value="2"/>
+                <Setter Property="FrameworkElement.VerticalAlignment" Value="Stretch"/>
+                <Setter Property="FrameworkElement.HorizontalAlignment" Value="Stretch"/>
+            </Style>
+            <Style x:Key="SortableColumnHeaderStyle" TargetType="{x:Type GridViewColumnHeader}"
+             BasedOn="{StaticResource TecnoLeftAlignedHeaderStyle}">
+            </Style>
+            <VisualBrush x:Key="NameFilterTextBoxBrush" AlignmentX="Left" AlignmentY="Top" Stretch="None">
+                <VisualBrush.Visual>
+                    <TextBlock Text="Type here to filter" Opacity="0.4" Background="Transparent"
+                     FontStyle="Italic" Width="{Binding ElementName=NameFilterTextBox, Path=ActualWidth}"
+                     Height="{Binding ElementName=NameFilterTextBox, Path=ActualHeight}"/>
+                </VisualBrush.Visual>
+            </VisualBrush>
+        </ResourceDictionary>
+    </FrameworkElement.Resources>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+        <ToolBarTray Grid.Row="0" Margin="0, 4, 0, 0" IsLocked="true">
+            <ToolBar Loaded="ToolBar_Loaded" Height="13" VerticalAlignment="Top">
+                <Button ToolTip="Add selected logic resources." ToolTipService.ShowOnDisabled="true"
+                Command="{Binding AddLBsCommand}">
+                    <Image RenderOptions.BitmapScalingMode="HighQuality" Source="Resources/AddLB.png"/>
+                </Button>
+                <Button ToolTip="Remove selected pin connection." ToolTipService.ShowOnDisabled="true"
+                Command="{Binding RemoveLBsCommand}">
+                    <Image RenderOptions.BitmapScalingMode="HighQuality" Source="Resources/RemoveLB.png"/>
+                </Button>
+            </ToolBar>
+        </ToolBarTray>
+        <Grid Row="1" Margin="4">
+            <Grid >
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+                <TextBlock Grid.Row="0" Text="Logic Resources:"
+                   Style="{StaticResource ListViewTitleStyle}"/>
+                <ListView SelectionChanged="ListView_SelectionChanged" x:Name="LBsView" Grid.Row="1" UseLayoutRounding="true"
+                  Style="{DynamicResource TecnoListViewLBStyle}" ItemsSource="{Binding LBs}">
+                    <ListView.View>
+                        <GridView AllowsColumnReorder="false">
+                            <GridViewColumn Width="100" CellTemplate="{StaticResource EmptyCellTemplate}" x:Name="EntriesSignalsColumn">
+                                <GridViewColumnHeader SizeChanged="GridViewColumnHeader_SetMinWidth_SizeChanged"
+                                      Content="Entry Connections"/>
+                            </GridViewColumn>
+                            <GridViewColumn Width="100" CellTemplate="{StaticResource LBEntryCellTemplate}" x:Name="EntriesColumn">
+                                <GridViewColumnHeader SizeChanged="GridViewColumnHeader_SetMinWidth_SizeChanged"
+                                      Content="Entries"/>
+                            </GridViewColumn>
+                            <GridViewColumn Width="100" CellTemplate="{StaticResource LBNameCellTemplate}" x:Name="LBColumn">
+                                <GridViewColumnHeader SizeChanged="GridViewColumnHeader_SetMinWidth_SizeChanged"
+                                      Content="Logic Resources"/>
+                            </GridViewColumn>
+                            <GridViewColumn Width="100" CellTemplate="{StaticResource LBExitCellTemplate}" x:Name="ExitsColumn">
+                                <GridViewColumnHeader SizeChanged="GridViewColumnHeader_SetMinWidth_SizeChanged"
+                                      Content="Exits"/>
+                            </GridViewColumn>
+                            <GridViewColumn Width="100" CellTemplate="{StaticResource EmptyCellTemplate}" x:Name="ExitsSignalsColumn">
+                                <GridViewColumnHeader SizeChanged="GridViewColumnHeader_SetMinWidth_SizeChanged"
+                                      Content="Exit Connections"/>
+                            </GridViewColumn>
+                        </GridView>
+                    </ListView.View>
+                </ListView>
+            </Grid>
+        </Grid>
+    </Grid>
 </tx:TxWPFViewerUserControl>
