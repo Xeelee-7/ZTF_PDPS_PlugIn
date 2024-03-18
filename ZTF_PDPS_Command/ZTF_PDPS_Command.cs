@@ -8,6 +8,7 @@ using EngineeringInternalExtension;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Security.Cryptography;
+using Tecnomatix.Engineering.DataTypes;
 
 namespace ZTF_PDPS_Command
 {
@@ -320,6 +321,20 @@ namespace ZTF_PDPS_Command
             return txPlcExpressionBuilder.Expression;
         }
 
+    }
+    public class CopyRobotLB : TxButtonCommand
+    {
+        public override string Category => "ZTFCommand";
+
+        public override string Name => "_CopyRobotLB";
+        public override string Description => "NOT COMPLETE IMP---";
+
+        public override void Execute(object cmdParams)
+        {
+            TxResourceCreationData txResourceCreationData = new TxResourceCreationData("KUKA LB");
+            TxApplication.ActiveDocument.PhysicalRoot.CreateResource(txResourceCreationData);
+            TxApplication.ActiveDocument.PhysicalRoot.
+        }
     }
     #endregion
 
