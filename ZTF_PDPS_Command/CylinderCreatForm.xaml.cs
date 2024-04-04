@@ -26,6 +26,7 @@ namespace ZTF_PDPS_Command
             GetElement(txObjects, selfLinkSolid as ITxLocatableObject);
         }
 
+
         double distance;
         TxVector pointOnObject, pointOnOther;
         TxObjectList<ITxKinematicLinkElement> collectElements;
