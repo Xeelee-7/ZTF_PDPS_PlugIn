@@ -17,7 +17,7 @@
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
-    <OutputPath>C:\Program Files\Tecnomatix_2307\eMPower\DotNetCommands\ZTF\</OutputPath>
+    <OutputPath>C:\Program Files\Tecnomatix_2307\eMPower\DotNetCustomization\</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
@@ -61,10 +61,8 @@
       <HintPath>C:\Program Files\Tecnomatix_16.1\eMPower\Tecnomatix.Engineering.dll</HintPath>
       <Private>False</Private>
     </Reference>
-    <Reference Include="Tecnomatix.Engineering.Ui, Version=16.1.0.400, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
+    <Reference Include="Tecnomatix.Engineering.Ui">
       <HintPath>C:\Program Files\Tecnomatix_16.1\eMPower\Tecnomatix.Engineering.Ui.dll</HintPath>
-      <Private>False</Private>
     </Reference>
     <Reference Include="WindowsBase" />
   </ItemGroup>
@@ -104,10 +102,9 @@
     <Compile Include="Form\SensorCreatForm.Designer.cs">
       <DependentUpon>SensorCreatForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="UserControl1.xaml.cs">
-      <DependentUpon>UserControl1.xaml</DependentUpon>
+    <Compile Include="CylinderCreatForm.xaml.cs">
+      <DependentUpon>CylinderCreatForm.xaml</DependentUpon>
     </Compile>
-    <Compile Include="WPFCLASS.cs" />
     <Compile Include="ZTF_PDPS_Command.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -142,7 +139,7 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Page Include="UserControl1.xaml">
+    <Page Include="CylinderCreatForm.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

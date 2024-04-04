@@ -333,7 +333,7 @@ namespace ZTF_PDPS_Command
         {
             TxResourceCreationData txResourceCreationData = new TxResourceCreationData("KUKA LB");
             TxApplication.ActiveDocument.PhysicalRoot.CreateResource(txResourceCreationData);
-            TxApplication.ActiveDocument.PhysicalRoot.
+           
         }
     }
     #endregion
@@ -409,14 +409,18 @@ namespace ZTF_PDPS_Command
         public override void Execute(object cmdParams)
         {
             TxApplication.ActiveUndoManager.StartTransaction();
-            ITxLocatableObject txObject = TxApplication.ActiveSelection.GetLastPickedItem() as ITxLocatableObject;
-            TxCurve txPolyline = txObject as TxCurve;
-            foreach (TxVector pt in txPolyline.Approximation.Points)
-            {
-                CreatPOINT(pt, txPolyline);
-                //
-            }
 
+            //ITxLocatableObject txObject = TxApplication.ActiveSelection.GetLastPickedItem() as ITxLocatableObject;
+            //TxCurve txPolyline = txObject as TxCurve;
+            //foreach (TxVector pt in txPolyline.Approximation.Points)
+            //{
+            //    CreatPOINT(pt, txPolyline);
+            //    //
+            //}
+
+
+            UserControl1 userControl1 = new UserControl1();
+            userControl1.Show();
 
             TxApplication.ActiveUndoManager.EndTransaction();
         }
