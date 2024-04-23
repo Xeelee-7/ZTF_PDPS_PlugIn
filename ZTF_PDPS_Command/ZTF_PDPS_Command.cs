@@ -1,14 +1,12 @@
-﻿using System;
+﻿using EngineeringInternalExtension;
+using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.Windows.Forms;
 using Tecnomatix.Engineering;
+using Tecnomatix.Engineering.DataTypes;
 using Tecnomatix.Engineering.Plc;
 using Tecnomatix.Engineering.Ui;
-using EngineeringInternalExtension;
-using System.Collections.Generic;
-using System.Drawing;
-using System.Security.Cryptography;
-using Tecnomatix.Engineering.DataTypes;
 
 namespace ZTF_PDPS_Command
 {
@@ -23,7 +21,7 @@ namespace ZTF_PDPS_Command
             RobotPoseSelectForm robotPoseSelectForm = new RobotPoseSelectForm();
             robotPoseSelectForm.Show();
             TxApplication.ActiveUndoManager.EndTransaction();
-        } 
+        }
     }
     #endregion
 
@@ -152,7 +150,7 @@ namespace ZTF_PDPS_Command
                 {
                     poseClose = pose;
                 }
-            }           
+            }
 
             device.SetModelingScope();
             if (device.LogicBehavior == null)
@@ -333,7 +331,7 @@ namespace ZTF_PDPS_Command
         {
             TxResourceCreationData txResourceCreationData = new TxResourceCreationData("KUKA LB");
             TxApplication.ActiveDocument.PhysicalRoot.CreateResource(txResourceCreationData);
-           
+
         }
     }
     #endregion
@@ -393,6 +391,48 @@ namespace ZTF_PDPS_Command
             poseCreatForm.Show();
         }
     }
+    public class CylinderCreat : TxButtonCommand
+    {
+        public override string Category => "ZTFCommand";
+
+        public override string Name => "_SimpleCylinderCreat";
+        TxCommandEnablerParam txCommandEnablerParam = new TxCommandEnablerParam() { ebable = true };
+        public override ITxCommandEnabler CommandEnabler => new TxCommandEnablerZTF(txCommandEnablerParam);
+        public override void Execute(object cmdParams)
+        {
+            SimpleCylinderForm simpleCylinderForm = new SimpleCylinderForm();
+            simpleCylinderForm.Load += SimpleCylinderForm_Load2;
+            simpleCylinderForm.FormClosing += SimpleCylinderForm_FormClosing2;
+            simpleCylinderForm.Show();
+        }
+
+        private void SimpleCylinderForm_FormClosing2(object sender, FormClosingEventArgs e)
+        {
+            txCommandEnablerParam.ebable = true;
+        }
+
+        private void SimpleCylinderForm_Load2(object sender, EventArgs e)
+        {
+            txCommandEnablerParam.ebable = false;
+        }
+    }
+    internal class TxCommandEnablerZTF : ITxCommandEnabler
+    {
+        TxCommandEnablerParam enablerParam;
+        public TxCommandEnablerZTF(TxCommandEnablerParam enablerParam)
+        {
+            this.enablerParam = enablerParam;
+        }
+        public bool Enable => enablerParam.ebable;
+    }
+    internal class TxCommandEnablerParam
+    {
+        public bool ebable { get; set; }
+        public TxCommandEnablerParam()
+        {
+            ebable = true;
+        }
+    }
     #endregion
 
     public class Test : TxButtonCommand
@@ -417,14 +457,12 @@ namespace ZTF_PDPS_Command
             //    CreatPOINT(pt, txPolyline);
             //    //
             //}
-
-
-            UserControl1 userControl1 = new UserControl1();
-            userControl1.Show();
+            SimpleCylinderForm simpleCylinderForm = new SimpleCylinderForm();
+            simpleCylinderForm.Show();
 
             TxApplication.ActiveUndoManager.EndTransaction();
         }
-      public void CreatPOINT (TxVector refVector,TxCurve txPolyline)
+        public void CreatPOINT(TxVector refVector, TxCurve txPolyline)
         {
             IEnumerable<TxParameterizedPoint> points = txPolyline.GetPointByPointToPointDistance(refVector, 0.1);
             TxVector[] txVectors = new TxVector[2];
@@ -432,15 +470,15 @@ namespace ZTF_PDPS_Command
             foreach (TxParameterizedPoint point in points)
             {
                 txVectors[i] = point.Point;
-               // TxApplication.ActiveDocument.PhysicalRoot.CreateFrame(new TxFrameCreationData("pp", new TxTransformation(point.Point, TxTransformation.TxTransformationType.Translate)));
+                // TxApplication.ActiveDocument.PhysicalRoot.CreateFrame(new TxFrameCreationData("pp", new TxTransformation(point.Point, TxTransformation.TxTransformationType.Translate)));
                 i++;
             }
-                double deg = Math.Atan((txVectors[1].Y - txVectors[0].Y) / (txVectors[1].X - txVectors[0].X));
-                TxTransformation txTransformation = new TxTransformation(refVector, TxTransformation.TxTransformationType.Translate);
-                txTransformation *= new TxTransformation(new TxVector(deg, 0, 0), TxTransformation.TxRotationType.EulerZYZ);
-                TxApplication.ActiveDocument.PhysicalRoot.CreateFrame(new TxFrameCreationData(
-            "111", txTransformation));
-            }
+            double deg = Math.Atan((txVectors[1].Y - txVectors[0].Y) / (txVectors[1].X - txVectors[0].X));
+            TxTransformation txTransformation = new TxTransformation(refVector, TxTransformation.TxTransformationType.Translate);
+            txTransformation *= new TxTransformation(new TxVector(deg, 0, 0), TxTransformation.TxRotationType.EulerZYZ);
+            TxApplication.ActiveDocument.PhysicalRoot.CreateFrame(new TxFrameCreationData(
+        "111", txTransformation));
+        }
     }
 }
 

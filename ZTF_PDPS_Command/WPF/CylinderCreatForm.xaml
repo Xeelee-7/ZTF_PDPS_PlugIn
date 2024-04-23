@@ -10,8 +10,12 @@
              d:DesignHeight="450" d:DesignWidth="800">
     <Grid>
         <StackPanel>
-            <tx:TxObjectGridControl Width="300" Height="100" Margin="10" ListenToPick="True"/>
-            <tx:TxObjEditBoxControl Width="300" Margin="10" ListenToPick="True"/>
+            <tx:TxObjectGridControl x:Name="elemList" Height="300" Width="300" Margin="10" ListenToPick="True" ValidatorType="Always" >
+                <tx:TxObjectGridControl.Columns>
+                    <DataGridTextColumn Header="obj"  Width="310" Binding="{Binding Name}"/>
+                </tx:TxObjectGridControl.Columns>
+            </tx:TxObjectGridControl>
+            <tx:TxObjEditBoxControl Width="300" Margin="10" ListenToPick="True" />
 
         </StackPanel>
 

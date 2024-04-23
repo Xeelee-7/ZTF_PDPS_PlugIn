@@ -21,7 +21,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <PlatformTarget>AnyCPU</PlatformTarget>
+    <PlatformTarget>x64</PlatformTarget>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -38,9 +38,11 @@
     </Reference>
     <Reference Include="Implementation">
       <HintPath>C:\Program Files\Tecnomatix_16.1\eMPower\Implementation.dll</HintPath>
+      <Private>False</Private>
     </Reference>
     <Reference Include="Implementation.Biw">
       <HintPath>C:\Program Files\Tecnomatix_2307\eMPower\Implementation.Biw.dll</HintPath>
+      <Private>False</Private>
     </Reference>
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
@@ -63,6 +65,7 @@
     </Reference>
     <Reference Include="Tecnomatix.Engineering.Ui">
       <HintPath>C:\Program Files\Tecnomatix_16.1\eMPower\Tecnomatix.Engineering.Ui.dll</HintPath>
+      <Private>False</Private>
     </Reference>
     <Reference Include="WindowsBase" />
   </ItemGroup>
@@ -78,6 +81,12 @@
     </Compile>
     <Compile Include="Form\PoseCreaterForm.designer.cs">
       <DependentUpon>PoseCreaterForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Form\SimpleCylinderForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Form\SimpleCylinderForm.Designer.cs">
+      <DependentUpon>SimpleCylinderForm.cs</DependentUpon>
     </Compile>
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
@@ -102,7 +111,7 @@
     <Compile Include="Form\SensorCreatForm.Designer.cs">
       <DependentUpon>SensorCreatForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="CylinderCreatForm.xaml.cs">
+    <Compile Include="WPF\CylinderCreatForm.xaml.cs">
       <DependentUpon>CylinderCreatForm.xaml</DependentUpon>
     </Compile>
     <Compile Include="ZTF_PDPS_Command.cs" />
@@ -117,6 +126,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Form\PoseCreaterForm.resx">
       <DependentUpon>PoseCreaterForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Form\SimpleCylinderForm.resx">
+      <DependentUpon>SimpleCylinderForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
@@ -133,13 +145,7 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\ZTF_PDPS_Viewer\ZTF_PDPS_Viewer.csproj">
-      <Project>{01962D19-203F-4268-BB44-4911C30FD9D7}</Project>
-      <Name>ZTF_PDPS_Viewer</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <Page Include="CylinderCreatForm.xaml">
+    <Page Include="WPF\CylinderCreatForm.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

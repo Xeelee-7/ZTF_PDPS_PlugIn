@@ -12,6 +12,8 @@ namespace ZTF_PDPS_Command
         public CylinderCreatForm()
         {
             InitializeComponent();
+           
+           
         }
 
         private void GetLinkElements(ITxKinematicsModellable txKinematicsModellable, ITx2Or3DimensionalGeometry selfLinkSolid, TxObjectList anotherLinkSolid)
@@ -51,8 +53,9 @@ namespace ZTF_PDPS_Command
             }
         }
     }
-}
-
-
 
 }
+
+
+
+
