@@ -1,5 +1,6 @@
 ﻿
 using System;
+using System.Collections;
 using System.Windows.Forms;
 using Tecnomatix.Engineering;
 using Tecnomatix.Engineering.DataTypes;
@@ -17,7 +18,7 @@ namespace ZTF_PDPS_Command
         #endregion
 
         //param
-        ITxComponent cylinderModel;       
+        ITxComponent cylinderModel;
         TxObjectList cylinderModelAllElements;//Directe Descendant Elements
 
         TxObjectList<ITxKinematicLinkElement> fixedLinkElements = new TxObjectList<ITxKinematicLinkElement>();
@@ -65,7 +66,7 @@ namespace ZTF_PDPS_Command
             cylinderModel = _pickCylinder.Object as ITxComponent;
 
             //
-            (cylinderModel  as ITxObjectCollection).AddObject(moveLinkElementsSelect);
+            (cylinderModel as ITxObjectCollection).AddObject(moveLinkElementsSelect);
             (cylinderModel as ITxObjectCollection).AddObject(fixedLinkElementsSelect);
             //
             foreach (TxGroup item in (cylinderModel as ITxObjectCollection).GetAllDescendants(new TxTypeFilter(typeof(ITxGroup))))
@@ -73,13 +74,13 @@ namespace ZTF_PDPS_Command
                 if (item.Name == "FixedLinkElementsGroup")
                 {
                     item.AddObjects(_pickFixedLinkElement.Objects);
-                    fixedLinkElementsSelect= item;
+                    fixedLinkElementsSelect = item;
 
                 }
                 if (item.Name == "moveLinkElementsGroup")
                 {
                     item.AddObjects(_pickMoveLinkElemet.Objects);
-                    moveLinkElementsSelect= item;
+                    moveLinkElementsSelect = item;
                 }
             }
 
@@ -94,8 +95,9 @@ namespace ZTF_PDPS_Command
         private void _creatKinmatic_Click(object sender, EventArgs e)
         {
             GetValueFromViewer();
-            GetMoveLinkElements(cylinderModel as ITxObjectCollection, fixedLinkElementsSelect, moveLinkElementsSelect);
 
+            GetMoveLinkElements(cylinderModel as ITxObjectCollection, fixedLinkElementsSelect, moveLinkElementsSelect);
+            //move link
             TxKinematicLinkCreationData moveLinkCreationData = new TxKinematicLinkCreationData("MoveLink");
             TxKinematicLink moveLink = (cylinderModel as ITxKinematicsModellable).CreateLink(moveLinkCreationData);
             moveLink.AddElements(moveLinkElements);
@@ -105,13 +107,59 @@ namespace ZTF_PDPS_Command
             {
                 fixedLinkElements.Add(item as ITxKinematicLinkElement);
             }
-
+            //fix link
             TxKinematicLinkCreationData fixLinkCreationData = new TxKinematicLinkCreationData("FixedLink");
             TxKinematicLink fixedLink = (cylinderModel as ITxKinematicsModellable).CreateLink(fixLinkCreationData);
             fixedLink.AddElements(fixedLinkElements);
 
+            //creat joint
+            TxJointCreationData j1CreationData = new TxJointCreationData("j1", TxJoint.TxJointType.Prismatic, fixedLink, moveLink);
 
+            TxVector vector1 = _pickAxisFrame.GetLocation().Translation;
+            TxVector vector2 = (_pickAxisFrame.GetLocation() * new TxTransformation(new TxVector
+                ((Convert.ToDouble(_selectAxisDirection.SelectedIndex == 0)) * 100, (Convert.ToDouble(_selectAxisDirection.SelectedIndex == 1)) * 100, (Convert.ToDouble(_selectAxisDirection.SelectedIndex == 2)) * 100),
+                _pickAxisFrame.GetLocation().RotationRPY_XYZ)).Translation;
+            TxJoint j1 = (cylinderModel as ITxKinematicsModellable).CreateJoint(j1CreationData);
 
+            // j1.HardLimits         const none variable
+            j1.Axis = new TxJointAxis(vector1, vector2);
+            j1.LowerSoftLimit = Convert.ToDouble(_jointLowerLimtValue.Text);
+            j1.UpperSoftLimit = Convert.ToDouble(_jointUpperLimtValue.Text);
+
+            CylinderCreatPose(j1.Device as ITxKinematicsModellable, j1);
+
+        }
+        private void CylinderCreatPose(ITxKinematicsModellable editorCylinder, TxJoint txJoint)
+        {
+            if (!(editorCylinder is ITxDevice txDevice))
+                return;
+            TxPoseCreationData creationData1 = new TxPoseCreationData("OPEN", new TxPoseData()
+            {
+                JointValues = new ArrayList()
+        {
+          _selectPoseType.SelectedIndex == 0 ? txJoint.LowerSoftLimit : txJoint.UpperSoftLimit
+        }
+            });
+            creationData1.CreateAtInstance = false;
+            TxPoseCreationData creationData2 = new TxPoseCreationData("CLOSE", new TxPoseData()
+            {
+                JointValues = new ArrayList()
+        {
+          _selectPoseType.SelectedIndex== 1 ? txJoint.LowerSoftLimit : txJoint.UpperSoftLimit
+        }
+            });
+            creationData2.CreateAtInstance = false;
+
+            //if (txDevice.PoseList.Count > 1)
+            //{
+            //    for (int index = txDevice.PoseList.Count - 1; index >= 0; --index)
+            //    {
+            //        if (txDevice.PoseList[index].CanBeDeleted)
+            //            txDevice.PoseList[index].Delete();
+            //    }
+            //}
+            txDevice.CreatePose(creationData1);
+            txDevice.CreatePose(creationData2);
         }
 
         private void _pickCylinder_Picked(object sender, TxObjEditBoxCtrl_PickedEventArgs args)
@@ -150,7 +198,7 @@ namespace ZTF_PDPS_Command
 
         private void GetMoveLinkElements(ITxObjectCollection cylinderModel, TxGroup fixedLinkElementsSelect, TxGroup moveLinkElementsSelect)
         {
-                  
+
 
             if (fixedLinkElementsSelect == null || fixedLinkElementsSelect.Count == 0 || moveLinkElementsSelect.Count == 0)
             { return; }
@@ -164,12 +212,12 @@ namespace ZTF_PDPS_Command
         }
         private void GetMoveLinkElement(TxObjectList cylinderModelAllElements, ITxLocatableObject moveLinkElementsSelect)
         {
-            TxObjectList< ITxLocatableObject> elementAttached = new TxObjectList<ITxLocatableObject>();
+            TxObjectList<ITxLocatableObject> elementAttached = new TxObjectList<ITxLocatableObject>();
             for (int i = cylinderModelAllElements.Count - 1; i >= 0; i--)
             {
                 moveLinkElementsSelect.GetMinimalDistance((ITxLocatableObject)cylinderModelAllElements[i], out distance, out vector1, out vector2);
-                if (distance > 0.2) return;
-               
+                if (distance > 0.2) continue;
+
                 moveLinkElements.Add(cylinderModelAllElements[i] as ITxKinematicLinkElement);
 
                 elementAttached.Add(cylinderModelAllElements[i] as ITxLocatableObject);
@@ -183,7 +231,7 @@ namespace ZTF_PDPS_Command
             {
                 GetMoveLinkElement(cylinderModelAllElements, item);
             }
-            
+
         }
     }
 }

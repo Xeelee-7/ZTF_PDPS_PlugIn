@@ -198,7 +198,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(681, 586);
+            this.ClientSize = new System.Drawing.Size(643, 586);
             this.Controls.Add(this._pickMoveLinkElemet);
             this.Controls.Add(this._endModeling);
             this.Controls.Add(this._setModeling);
