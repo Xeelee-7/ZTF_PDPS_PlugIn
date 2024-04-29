@@ -14,7 +14,7 @@ namespace ZTF_PDPS_Command
         #region type filter
         TxTypeFilter canCreatCtlinderTypeFilter;
         TxTypeFilter dimensionalGeometryTypeFilter;
-        TxTypeFilter txGroup_dimensionalGeometryTypeFilter;
+        TxTypeFilter txGroup_dimensionalGeometryTypeFilter; 
         #endregion
 
         //param
