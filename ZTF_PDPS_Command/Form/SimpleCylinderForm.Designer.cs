@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(SimpleCylinderForm));
             this._pickCylinder = new Tecnomatix.Engineering.Ui.TxObjEditBoxCtrl();
             this._pickFixedLinkElement = new Tecnomatix.Engineering.Ui.TxObjGridCtrl();
             this._pickAxisFrame = new Tecnomatix.Engineering.Ui.TxFrameEditBoxCtrl();
@@ -212,6 +213,7 @@
             this.Controls.Add(this._pickAxisFrame);
             this.Controls.Add(this._pickFixedLinkElement);
             this.Controls.Add(this._pickCylinder);
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "SimpleCylinderForm";
             this.SemiModal = false;
             this.Text = "SimpleCylinderForm";

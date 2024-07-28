@@ -1,7 +1,9 @@
 ﻿using EngineeringInternalExtension;
+using EngineeringInternalExtension.ModelObjects;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Windows.Forms;
 using Tecnomatix.Engineering;
 using Tecnomatix.Engineering.DataTypes;
@@ -334,6 +336,113 @@ namespace ZTF_PDPS_Command
 
         }
     }
+    public class AddServoLB : TxButtonCommand
+    {
+        public override string Category => "ZTFCommand";
+        public override string Name => "_AddServoLB ";
+        public override string Description => "Add STO";
+        string deviceFullPath = null;
+        public override void Execute(object cmdParams)
+        {
+            TxObjectList txObjects = TxApplication.ActiveSelection.GetItems();
+
+            foreach (ITxComponent txObject in txObjects)
+            {
+                AddLogicToServo(txObject);
+            }
+            TxMessageBox.Show("Add LogicBlock Complete.", "", MessageBoxButtons.OK, MessageBoxIcon.Information);
+
+        }
+        private void AddLogicToServo(ITxComponent device)
+        {
+            try
+            {
+                deviceFullPath = ((device as ITxStorable).StorageObject as TxLibraryStorage).FullPath;
+            }
+            catch (Exception)
+            {
+                MessageBox.Show($"Can not get the {device.Name}'s path");
+            }
+
+            device.SetModelingScope();
+            TxPlcLogicBehavior txPlcLogicBehavior = (device as ITxPlcLogicResource).LogicBehavior;
+            AddLogicToSingleServo(txPlcLogicBehavior);
+
+            device.EndModeling(deviceFullPath);
+
+        }
+        private void AddLogicToSingleServo(TxPlcLogicBehavior txPlcLogicBehavior)
+        {
+            ITxPlcLogicBehaviorEntry STOEntry = CreatEntry("STO", txPlcLogicBehavior, TxPlcHardwareType.Bool);
+            ITxPlcLogicBehaviorEntry homeTrig = txPlcLogicBehavior.Entries[0];
+            ITxPlcLogicBehaviorAction homeMode = txPlcLogicBehavior.Actions[0];
+            ITxPlcLogicBehaviorAction ActMode = txPlcLogicBehavior.Actions[1];
+            ITxPlcLogicBehaviorEntry triger1 = txPlcLogicBehavior.Entries[1];
+            ITxPlcLogicBehaviorEntry triger2 = txPlcLogicBehavior.Entries[2];
+            ITxPlcLogicBehaviorEntry locateLocation = txPlcLogicBehavior.Entries[3];
+            ITxPlcLogicBehaviorParameter jointPosition = txPlcLogicBehavior.Parameters[2];
+
+            #region  actmode
+            TxPlcExpressionBuilder expressionBuilder1 = new TxPlcExpressionBuilder();
+            expressionBuilder1.Add(triger1);
+            expressionBuilder1.Add(TxPlcExpressionOperator.Or);
+            expressionBuilder1.Add(triger2);
+            TxPlcFunctionParameterData txPlcFunctionParameterData1 = new TxPlcFunctionParameterData();
+            txPlcFunctionParameterData1.SetAsExpression(expressionBuilder1.Expression);
+            //
+            TxPlcExpressionBuilder expressionBuilder2 = new TxPlcExpressionBuilder();
+            expressionBuilder2.Add(locateLocation);
+            expressionBuilder2.Add(TxPlcExpressionOperator.IsEqualTo);
+            expressionBuilder2.Add(jointPosition);
+            TxPlcFunctionParameterData txPlcFunctionParameterData2 = new TxPlcFunctionParameterData();
+            txPlcFunctionParameterData2.SetAsExpression(expressionBuilder2.Expression);
+
+            ArrayList parameters = new ArrayList();
+            parameters.Add(txPlcFunctionParameterData1);
+            parameters.Add(txPlcFunctionParameterData2);
+
+            TxPlcExpressionBuilder actionBuilder = new TxPlcExpressionBuilder();
+            actionBuilder.Add(TxPlcExpressionFunctionType.SR, parameters);
+            actionBuilder.Add(TxPlcExpressionOperator.And);
+            actionBuilder.Add(STOEntry);
+            TxPlcExpression newExpression = actionBuilder.Expression;
+            ActMode.Expression= newExpression;
+            #endregion
+            //homeMode 
+            TxPlcExpressionBuilder expressionBuilderA = new TxPlcExpressionBuilder();
+            expressionBuilderA.Add(homeTrig);
+            TxPlcFunctionParameterData txPlcFunctionParameterDataA = new TxPlcFunctionParameterData();
+            txPlcFunctionParameterDataA.SetAsExpression(expressionBuilderA.Expression);
+            //
+            TxPlcValue txPlcValue = new TxPlcValue();
+            txPlcValue.IntValue = 0;
+            TxPlcExpressionBuilder expressionBuilderB = new TxPlcExpressionBuilder();
+            expressionBuilderB.Add(jointPosition);
+            expressionBuilderB.Add(TxPlcExpressionOperator.IsEqualTo);
+            expressionBuilderB.Add(TxPlcSignalDataType.Int, txPlcValue);
+            TxPlcFunctionParameterData txPlcFunctionParameterDataB = new TxPlcFunctionParameterData();
+            txPlcFunctionParameterDataB.SetAsExpression(expressionBuilderB.Expression);
+
+            ArrayList parametersA = new ArrayList();
+            parametersA.Add(txPlcFunctionParameterDataA);
+            parametersA.Add(txPlcFunctionParameterDataB);
+
+            TxPlcExpressionBuilder actionBuilderA = new TxPlcExpressionBuilder();
+            actionBuilderA.Add(TxPlcExpressionFunctionType.SR, parametersA);
+            actionBuilderA.Add(TxPlcExpressionOperator.And);
+            actionBuilderA.Add(STOEntry);
+            homeMode.Expression=actionBuilderA.Expression;
+
+
+        }
+
+        private static ITxPlcLogicBehaviorEntry CreatEntry(string entryName, TxPlcLogicBehavior logicBehavior, TxPlcHardwareType plcHardwareType)
+        {
+            TxPlcLogicBehaviorEntryCreationData entryCreationData = new TxPlcLogicBehaviorEntryCreationData() { Name = entryName, HardwareType = plcHardwareType };
+            ITxPlcLogicBehaviorEntry entry = logicBehavior.CreateEntry(entryCreationData);
+            return entry;
+        }
+    }
     #endregion
 
     #region Signal
@@ -433,6 +542,41 @@ namespace ZTF_PDPS_Command
             ebable = true;
         }
     }
+    public class _JointProperty : TxButtonCommand
+    {
+        public override string Category => "ZTF_PDPS_Commands";
+
+        public override string Name => "_JointPropertyModify";
+
+        public override string Description => "Chang joint's speed and acc to 10000 ";
+
+        public override void Execute(object cmdParams)
+        {
+            foreach (ITxObject allItem in (Collection<ITxObject>)TxApplication.ActiveSelection.GetAllItems())
+            {
+                ITxComponent txDevice = allItem as ITxComponent;
+                if ((txDevice as ITxKinematicsModellable).Joints.Count > 0)
+                {
+                    string fullPath = ((txDevice as ITxStorable).StorageObject as TxLibraryStorage).FullPath;
+                    txDevice.SetModelingScope();
+                    foreach (TxJoint joint in (Collection<TxJoint>)(txDevice as ITxKinematicsModellable).Joints)
+                    {
+                        if (joint.Type == TxJoint.TxJointType.Prismatic)
+                        {
+                          //  joint.MaxSpeed = 10000.0;
+                            joint.MaxAcceleration = 999999.0;
+                        }
+                        else
+                        {
+                          //  joint.MaxSpeed = 500.0 * Math.PI / 9.0;
+                            joint.MaxAcceleration = 50000.0 * Math.PI / 9.0;
+                        }
+                    }
+                    txDevice.EndModeling(fullPath);
+                }
+            }
+        }
+    }
     #endregion
 
     public class Test : TxButtonCommand
@@ -446,6 +590,7 @@ namespace ZTF_PDPS_Command
                 return "TEXT";
             }
         }
+        public override string Bitmap => "EditLogicResource.bmp";
         public override void Execute(object cmdParams)
         {
             TxApplication.ActiveUndoManager.StartTransaction();
@@ -459,6 +604,9 @@ namespace ZTF_PDPS_Command
             //}
             SimpleCylinderForm simpleCylinderForm = new SimpleCylinderForm();
             simpleCylinderForm.Show();
+
+
+
 
             TxApplication.ActiveUndoManager.EndTransaction();
         }
@@ -479,6 +627,7 @@ namespace ZTF_PDPS_Command
             TxApplication.ActiveDocument.PhysicalRoot.CreateFrame(new TxFrameCreationData(
         "111", txTransformation));
         }
+
     }
 }
 

@@ -17,7 +17,7 @@
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
-    <OutputPath>C:\Program Files\Tecnomatix_2307\eMPower\DotNetCustomization\</OutputPath>
+    <OutputPath>C:\Program Files\Tecnomatix_2301.0\eMPower\DotNetCustomization\</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
@@ -32,6 +32,10 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="DnPlcCommands">
+      <HintPath>C:\Program Files\Tecnomatix_2307\eMPower\DotNetCommands\DnPlcCommands.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
     <Reference Include="EngineeringInternalExtension">
       <HintPath>C:\Program Files\Tecnomatix_2307\eMPower\EngineeringInternalExtension.dll</HintPath>
       <Private>False</Private>
@@ -152,6 +156,12 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="EditLogicResource.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="CATL.ico" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
